@@ -5,38 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global English Placement Test</title>
     <style>
-        :root { --main-blue: #004a99; --main-gold: #f4b400; --bg-light: #f4f7f9; --text-main: #2d3748; --shadow: 0 10px 25px rgba(0,0,0,0.08); }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-light); color: var(--text-main); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .main-card { background: white; width: 100%; max-width: 650px; padding-bottom: 40px; border-radius: 24px; box-shadow: var(--shadow); text-align: center; overflow: hidden; }
-        .cintillo { height: 20px; width: 100%; background: linear-gradient(90deg, var(--main-blue) 0%, var(--main-blue) 70%, var(--main-gold) 70%, var(--main-gold) 100%); margin-bottom: 30px; }
-        .card-content { padding: 0 40px; }
-        .main-title { color: var(--main-blue); font-size: 20px; font-weight: 800; margin-bottom: 30px; text-transform: uppercase; }
-        .progress-stepper { display: flex; justify-content: space-between; margin-bottom: 40px; position: relative; }
-        .progress-stepper::before { content: ""; position: absolute; top: 15px; left: 0; right: 0; height: 2px; background: #e2e8f0; z-index: 1; }
-        .step-dot { width: 32px; height: 32px; background: white; border: 2px solid #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; z-index: 2; transition: 0.3s; }
-        .step-dot.active { background: var(--main-gold); border-color: var(--main-gold); color: white; transform: scale(1.1); }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left; }
+        /* COLORES OFICIALES Y DISEÑO LIMPIO */
+        :root { 
+            --main-blue: #004a99; 
+            --main-gold: #f4b400; 
+            --main-red: #d9534f;
+            --bg-body: #f4f7f9; 
+            --text-dark: #2d3748; 
+            --text-muted: #718096;
+            --border-light: #e2e8f0;
+            --shadow-soft: 0 10px 25px rgba(0,0,0,0.05); 
+        }
+        
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-body); color: var(--text-dark); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        
+        .main-card { background: white; width: 100%; max-width: 650px; padding-bottom: 50px; border-radius: 16px; box-shadow: var(--shadow-soft); text-align: center; overflow: hidden; }
+        
+        /* CINTILLO EXACTO A LA FOTO */
+        .cintillo { height: 18px; width: 100%; background: linear-gradient(90deg, var(--main-blue) 0%, var(--main-blue) 65%, var(--main-gold) 65%, var(--main-gold) 100%); margin-bottom: 35px; }
+        
+        .card-content { padding: 0 45px; }
+        .main-title { color: var(--main-blue); font-size: 22px; font-weight: 800; margin-bottom: 35px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        /* BARRA DE PROGRESO COLOR CODED */
+        .progress-stepper { display: flex; justify-content: space-between; margin-bottom: 45px; position: relative; }
+        .progress-stepper::before { content: ""; position: absolute; top: 15px; left: 0; right: 0; height: 2px; background: var(--border-light); z-index: 1; }
+        .step-dot { width: 32px; height: 32px; background: var(--border-light); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; z-index: 2; transition: 0.3s; color: white; }
+        .step-dot.active, .step-dot.completed { background: var(--main-gold); box-shadow: 0 0 0 4px rgba(244, 180, 0, 0.2); }
+
+        /* FORMULARIOS LIMPIOS */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; }
         .full-width { grid-column: span 2; }
-        label { display: block; font-size: 13px; font-weight: 600; color: #4a5568; margin-bottom: 5px; }
-        input, select { width: 100%; padding: 12px 15px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 15px; box-sizing: border-box; }
-        .btn-primary { background: var(--main-blue); color: white; border: none; padding: 18px; border-radius: 12px; font-size: 17px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 25px; transition: 0.3s; }
-        .btn-primary:hover { background: #003366; transform: translateY(-2px); }
-        .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+        label { display: block; font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
+        input, select { width: 100%; padding: 14px 16px; border: 1.5px solid var(--border-light); border-radius: 10px; font-size: 15px; box-sizing: border-box; transition: 0.2s; background-color: #f8fafc; color: var(--text-dark); }
+        input:focus, select:focus { border-color: var(--main-blue); background-color: white; outline: none; box-shadow: 0 0 0 3px rgba(0, 74, 153, 0.1); }
+        
+        /* BOTONES CLAROS Y DIRECTOS */
+        .btn-primary { background: var(--main-blue); color: white; border: none; padding: 16px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 30px; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
+        .btn-primary:hover { background: #003875; transform: translateY(-2px); }
+        .btn-primary:disabled { background: #cbd5e0; cursor: not-allowed; transform: none; }
+        
         .hidden { display: none !important; }
-        .timer-pill { background: #ed1c24; color: white; padding: 6px 16px; border-radius: 20px; font-family: monospace; font-weight: bold; margin-bottom: 20px; display: inline-block; font-size: 1.2rem; }
-        .instruction-box { background: #f8fafc; padding: 25px; border-radius: 15px; margin: 20px 0; text-align: left; border-left: 5px solid var(--main-gold); }
-        .instruction-box h4 { margin-top: 0; color: var(--main-blue); }
-        .instruction-box ul { padding-left: 20px; font-size: 14px; color: #4a5568; }
-        .options-grid { display: grid; gap: 12px; margin-top: 25px; }
-        .option-card { background: #fff; border: 2px solid #edf2f7; padding: 18px 22px; border-radius: 14px; cursor: pointer; text-align: left; font-weight: 500; transition: 0.2s; font-size: 1rem; width: 100%; box-sizing: border-box; }
-        .option-card:hover { border-color: var(--main-blue); background: #f0f7ff; transform: translateX(5px); }
-        #progress-bar-container { background: #edf2f7; height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 25px; }
-        #progress-bar, #grammar-progress-bar { background: var(--main-gold); height: 100%; width: 0%; transition: 0.4s; }
-        video { width: 150px; height: auto; border: 2px solid #d9534f; border-radius: 8px; margin: 0 auto 15px auto; transform: scaleX(-1); display: block;}
-        .btn-mic { background: #d9534f; color: white; width: 70px; height: 70px; border-radius: 50%; border: none; font-size: 24px; cursor: pointer; margin: 15px auto; display: block; transition: 0.3s; }
-        .btn-mic.recording { background: #5cb85c; animation: pulse 1.5s infinite; }
+        .timer-pill { background: var(--main-red); color: white; padding: 8px 20px; border-radius: 20px; font-family: monospace; font-weight: bold; margin-bottom: 25px; display: inline-block; font-size: 1.3rem; letter-spacing: 1px;}
+        
+        /* INSTRUCCIONES SIN SOBRECARGA */
+        .instruction-box { background: #f0f4f8; padding: 25px; border-radius: 12px; margin: 20px 0; text-align: left; border-left: 4px solid var(--main-blue); }
+        .instruction-box h4 { margin-top: 0; color: var(--main-blue); font-size: 15px; text-transform: uppercase; }
+        .instruction-box p { font-size: 15px; color: var(--text-dark); line-height: 1.5; margin-bottom: 0; }
+
+        /* PREGUNTAS Y OPCIONES */
+        .options-grid { display: grid; gap: 14px; margin-top: 25px; }
+        .option-card { background: white; border: 2px solid var(--border-light); padding: 18px 22px; border-radius: 12px; cursor: pointer; text-align: left; font-weight: 500; transition: all 0.2s ease; font-size: 1.05rem; box-sizing: border-box; color: var(--text-dark); }
+        .option-card:hover { border-color: var(--main-blue); background: #f4f8fc; transform: translateX(4px); }
+        
+        #progress-bar-container { background: var(--border-light); height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 30px; }
+        #progress-bar, #grammar-progress-bar { background: var(--main-blue); height: 100%; width: 0%; transition: 0.4s ease-out; }
+
+        /* SECCIÓN ORAL */
+        video { width: 160px; height: auto; border: 3px solid var(--border-light); border-radius: 12px; margin: 0 auto 20px auto; transform: scaleX(-1); display: block; }
+        
+        .btn-mic { background: var(--main-red); color: white; width: 75px; height: 75px; border-radius: 50%; border: none; font-size: 28px; cursor: pointer; margin: 20px auto; display: block; transition: 0.3s; box-shadow: 0 4px 15px rgba(217, 83, 79, 0.3); }
+        .btn-mic:hover { transform: scale(1.05); }
+        .btn-mic.recording { background: #48bb78; animation: pulse 1.5s infinite; box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4); }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        .success-checkmark { font-size: 60px; color: #48bb78; margin-bottom: 20px; }
+
+        /* PANTALLA FINAL EXACTA A LA FOTO */
+        .trophy-icon { font-size: 65px; margin-bottom: 10px; }
+        .final-title { color: var(--main-blue); font-size: 24px; font-weight: 800; margin-bottom: 15px; }
+        .final-subtitle { color: var(--text-muted); font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .check-icon { background: #48bb78; color: white; border-radius: 4px; padding: 2px 4px; font-size: 12px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -59,7 +96,7 @@
                 <div><label>ID Card / Passport</label><input type="text" id="stdId" placeholder="ID Number"></div>
                 <div><label>Email Address</label><input type="email" id="stdEmail" placeholder="example@mail.com"></div>
                 <div><label>Phone Number</label><input type="tel" id="stdPhone" placeholder="Phone"></div>
-                <div>
+                <div class="full-width">
                     <label>Branch / Program</label>
                     <select id="stdSede">
                         <option value="Las Mercedes">Las Mercedes</option>
@@ -69,62 +106,64 @@
                     </select>
                 </div>
             </div>
-            <button class="btn-primary" onclick="startPhase1()">PROCEED TO ASSESSMENT</button>
+            <button class="btn-primary" onclick="startPhase1()">Proceed to Assessment</button>
         </div>
 
         <!-- FASE 1: LISTENING -->
         <div id="section-listening" class="hidden">
             <div id="timerDisplay" class="timer-pill">15:00</div>
-            <h2 style="color: var(--main-blue); margin: 0;">Part 1: Listening</h2>
+            <h2 style="color: var(--main-blue); margin: 0; font-size: 1.6rem;">Part 1: Listening</h2>
             <div class="instruction-box" id="listen-instructions">
                 <h4>Instructions</h4>
-                <p>Ensure your headphones are connected. The timer starts when you press play.</p>
-                <button class="btn-primary" onclick="startListeningTest()">▶️ PLAY AUDIO & START</button>
+                <p>Ensure your headphones are connected. The timer starts when you press play. You only have one opportunity to listen.</p>
+                <button class="btn-primary" onclick="startListeningTest()">▶️ Play Audio & Start</button>
             </div>
             <div id="listening-ui" class="hidden">
                 <div id="progress-bar-container"><div id="progress-bar"></div></div>
-                <h3 id="listenQText" style="text-align: left; font-size: 1.1rem;"></h3>
+                <h3 id="listenQText" style="text-align: left; font-size: 1.2rem; color: var(--main-blue); margin-bottom: 20px;"></h3>
                 <div id="listenOptions" class="options-grid"></div>
             </div>
         </div>
 
         <!-- FASE 2: GRAMMAR -->
         <div id="section-grammar" class="hidden">
-            <h2 style="color: var(--main-blue);">Part 2: Language Use</h2>
+            <h2 style="color: var(--main-blue); font-size: 1.6rem; margin: 0;">Part 2: Language Use</h2>
             <div class="instruction-box" id="grammar-instructions">
                 <h4>Instructions</h4>
-                <p>Sequential test. The system will stop automatically after 5 consecutive errors to determine your current level.</p>
-                <button class="btn-primary" onclick="startGrammarTest()">START LANGUAGE TEST</button>
+                <p>This is a sequential test. The system will stop automatically after 5 consecutive errors to determine your current baseline level.</p>
+                <button class="btn-primary" onclick="startGrammarTest()">Start Language Test</button>
             </div>
             <div id="grammar-ui" class="hidden">
                 <div id="progress-bar-container"><div id="grammar-progress-bar"></div></div>
-                <h3 id="grammarQText" style="text-align: left; font-size: 1.1rem;"></h3>
+                <h3 id="grammarQText" style="text-align: left; font-size: 1.2rem; color: var(--main-blue); margin-bottom: 20px;"></h3>
                 <div id="grammarOptions" class="options-grid"></div>
             </div>
         </div>
 
         <!-- FASE 3: SPEAKING -->
         <div id="section-speaking" class="hidden">
-            <h2 style="color: var(--main-blue);">Part 3: Oral Validation</h2>
+            <h2 style="color: var(--main-blue); font-size: 1.6rem; margin: 0;">Part 3: Oral Validation</h2>
             <div class="instruction-box" id="speaking-instructions">
                 <h4>Instructions</h4>
-                <p>We need camera and microphone access to record your oral responses. This validates your previous scores.</p>
-                <button class="btn-primary" onclick="initMedia()">ENABLE CAMERA & MIC</button>
+                <p>We require camera and microphone access to record your oral responses. This is mandatory to validate your previous scores.</p>
+                <button class="btn-primary" onclick="initMedia()">Enable Camera & Mic</button>
             </div>
             <div id="speaking-ui" class="hidden">
                 <video id="video-feed" autoplay muted playsinline></video>
-                <h3 id="speakQText" style="font-size: 1.1rem; color: var(--main-blue); margin-top: 15px;"></h3>
+                <h3 id="speakQText" style="font-size: 1.2rem; color: var(--text-dark); margin-top: 15px; min-height: 60px; padding: 0 20px;"></h3>
                 <button class="btn-mic" id="recordBtn" onclick="toggleRecording()">🎤</button>
-                <p id="recordStatus" style="font-weight: bold; color: #4a5568;">Tap microphone to record</p>
-                <button class="btn-primary" id="nextSpeakBtn" onclick="nextSpeakingQ()" disabled>NEXT QUESTION</button>
+                <p id="recordStatus" style="font-weight: bold; color: var(--text-muted);">Tap microphone to record</p>
+                <button class="btn-primary" id="nextSpeakBtn" onclick="nextSpeakingQ()" disabled>Next Question</button>
             </div>
         </div>
 
-        <!-- FASE 4: END -->
-        <div id="section-end" class="hidden">
-            <div class="success-checkmark">✔</div>
-            <h2 style="color: var(--main-blue);">Uploading Results...</h2>
-            <p id="upload-status" style="font-size: 1.1rem; color: #4a5568;">⏳ Please wait, securing your data to the database...</p>
+        <!-- FASE 4: END (DISEÑO EXACTO A LA FOTO) -->
+        <div id="section-end" class="hidden" style="padding-top: 30px;">
+            <div class="trophy-icon">🏆</div>
+            <h2 class="final-title" id="final-title-text">Uploading Results...</h2>
+            <div class="final-subtitle" id="final-subtitle-text">
+                <span style="font-size: 1.2rem;">⏳ Processing secure data...</span>
+            </div>
         </div>
     </div>
 </div>
@@ -132,11 +171,11 @@
 <canvas id="photo-canvas" class="hidden" width="640" height="480"></canvas>
 
 <script>
-    // TU URL CONECTADA EXACTAMENTE AQUÍ
+    // TU URL ESTÁ INYECTADA AQUÍ DIRECTAMENTE
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxJ_7RuGPFBUTwyxCeEnTKpAsqja801PrsaU3BDGFdPPKPcNt1RE8ttnHdjxE4cnlY/exec"; 
-    
     const audioTrack = new Audio("Placement test v2 slow.mp3");
 
+    // --- BANCOS DE PREGUNTAS ---
     const listeningBank = [
         { lvl: 1, q: "According to the audio, what is Alex's current occupation?", opt: ["Teacher", "Student", "Doctor"], c: 1 },
         { lvl: 1, q: "How many chairs are there total in the classroom described?", opt: ["Five chairs", "One classroom", "Ten chairs"], c: 2 },
@@ -318,13 +357,21 @@
     let currentIdx = 0, consecutiveErrors = 0, timerInterval, timeLeft = 900;
     let mediaStream, mediaRecorder, audioChunks = [], recordedAudiosBase64 = [], studentPhotoBase64 = "";
 
+    function setStep(step) {
+        document.querySelectorAll('.step-dot').forEach((el, index) => {
+            if (index < step) el.classList.add('completed');
+            else if (index === step) el.classList.add('active');
+            else { el.classList.remove('active'); el.classList.remove('completed'); }
+        });
+    }
+
     function startPhase1() {
         const n = document.getElementById('stdName').value; const id = document.getElementById('stdId').value;
         if(!n || !id) return alert("Name and ID are required.");
         globalData.student = { name: n, id: id, email: document.getElementById('stdEmail').value, phone: document.getElementById('stdPhone').value, sede: document.getElementById('stdSede').value };
         document.getElementById('section-setup').classList.add('hidden');
         document.getElementById('section-listening').classList.remove('hidden');
-        document.getElementById('dot2').classList.add('active');
+        setStep(1);
     }
 
     function startListeningTest() {
@@ -356,7 +403,7 @@
         clearInterval(timerInterval); audioTrack.pause(); currentIdx = 0;
         document.getElementById('section-listening').classList.add('hidden');
         document.getElementById('section-grammar').classList.remove('hidden');
-        document.getElementById('dot3').classList.add('active');
+        setStep(2);
     }
 
     function startGrammarTest() {
@@ -386,7 +433,7 @@
         currentIdx = 0;
         document.getElementById('section-grammar').classList.add('hidden');
         document.getElementById('section-speaking').classList.remove('hidden');
-        document.getElementById('dot4').classList.add('active');
+        setStep(3);
     }
 
     async function initMedia() {
@@ -405,7 +452,7 @@
     }
 
     function renderSpeakingQ() {
-        if(currentIdx >= 3) return endTest(); // Evalúa 3 preguntas orales al azar o secuenciales
+        if(currentIdx >= 3) return endTest();
         document.getElementById('speakQText').innerText = speakingBank[currentIdx];
         document.getElementById('nextSpeakBtn').disabled = true;
     }
@@ -421,14 +468,19 @@
                 reader.onloadend = () => { recordedAudiosBase64.push({ q: currentIdx + 1, audioData: reader.result.split(',')[1] }); document.getElementById('nextSpeakBtn').disabled = false; }
             };
             mediaRecorder.start();
-            btn.classList.add('recording'); btn.innerText = "⏸"; status.innerText = "🔴 RECORDING... Tap to stop";
+            btn.classList.add('recording'); btn.innerText = "⏸"; status.innerText = "🔴 Recording... Tap to stop"; status.style.color = "var(--main-red)";
         } else {
             mediaRecorder.stop();
-            btn.classList.remove('recording'); btn.innerText = "🎤"; status.innerText = "✅ Audio saved. Click Next.";
+            btn.classList.remove('recording'); btn.innerText = "🎤"; status.innerHTML = "<span class='check-icon'>✔</span> Audio saved. Click Next."; status.style.color = "#48bb78";
         }
     }
 
-    function nextSpeakingQ() { currentIdx++; renderSpeakingQ(); }
+    function nextSpeakingQ() { 
+        currentIdx++; 
+        document.getElementById('recordStatus').innerText = "Tap microphone to record"; 
+        document.getElementById('recordStatus').style.color = "var(--text-muted)";
+        renderSpeakingQ(); 
+    }
 
     async function endTest() {
         if (mediaStream) mediaStream.getTracks().forEach(t => t.stop());
@@ -442,10 +494,11 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ student: globalData.student, scores: globalData.scores, photo: studentPhotoBase64, audios: recordedAudiosBase64 })
             });
-            document.getElementById('upload-status').innerHTML = "✅ Database updated successfully.<br>You can close this tab.";
-            document.querySelector('.success-checkmark').innerText = "🏆";
+            document.getElementById('final-title-text').innerText = "Uploading Results...";
+            document.getElementById('final-subtitle-text').innerHTML = "<span class='check-icon' style='font-size: 16px; padding: 4px 8px;'>✔</span> Database updated successfully. You can close this tab.";
         } catch (e) {
-            document.getElementById('upload-status').innerText = "❌ Error uploading to database.";
+            document.getElementById('final-title-text').innerText = "Network Error";
+            document.getElementById('final-subtitle-text').innerText = "Please notify your supervisor.";
         }
     }
 </script>
