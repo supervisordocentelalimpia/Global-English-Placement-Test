@@ -5,98 +5,153 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global English Placement Test</title>
     <style>
-        /* COLORES OFICIALES Y DISEÑO LIMPIO */
+        /* =========================================================
+           UI/UX MODERN PREMIUM REDESIGN - AMERICAN SPACES PALETTE
+           ========================================================= */
         :root { 
-            --main-blue: #004a99; 
-            --main-gold: #f4b400; 
-            --main-red: #d9534f;
-            --bg-body: #f4f7f9; 
-            --text-dark: #2d3748; 
-            --text-muted: #718096;
-            --border-light: #e2e8f0;
-            --shadow-soft: 0 10px 25px rgba(0,0,0,0.05); 
+            --dark-blue: #002B7F; 
+            --light-blue: #005BBB; 
+            --dark-red: #BA0C2F; 
+            --main-gold: #FFC627; 
+            --bg-gradient: linear-gradient(135deg, #e2e8f0 0%, #f4f7f9 100%);
+            --surface: #ffffff;
+            --text-dark: #1a202c; 
+            --text-muted: #4a5568;
+            --border-color: #cbd5e1;
+            --shadow-app: 0 20px 40px rgba(0, 43, 127, 0.08), 0 1px 3px rgba(0,0,0,0.05); 
         }
         
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-body); color: var(--text-dark); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg-gradient); color: var(--text-dark); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
         
-        .main-card { background: white; width: 100%; max-width: 650px; padding-bottom: 50px; border-radius: 16px; box-shadow: var(--shadow-soft); text-align: center; overflow: hidden; }
+        /* THE APP CARD */
+        .main-card { background: var(--surface); width: 100%; max-width: 680px; border-radius: 20px; box-shadow: var(--shadow-app); overflow: hidden; position: relative; transition: all 0.3s ease; }
         
-        /* CINTILLO EXACTO A LA FOTO */
-        .cintillo { height: 18px; width: 100%; background: linear-gradient(90deg, var(--main-blue) 0%, var(--main-blue) 65%, var(--main-gold) 65%, var(--main-gold) 100%); margin-bottom: 35px; }
+        /* MODERN HEADER WITH BRAND COLORS */
+        .app-header { background: var(--dark-blue); padding: 30px 40px; position: relative; text-align: center; }
+        .app-header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--light-blue) 0%, var(--dark-red) 50%, var(--main-gold) 100%); }
+        .main-title { color: #ffffff; font-size: 24px; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 1.5px; }
         
-        .card-content { padding: 0 45px; }
-        .main-title { color: var(--main-blue); font-size: 22px; font-weight: 800; margin-bottom: 35px; text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        /* BARRA DE PROGRESO COLOR CODED */
-        .progress-stepper { display: flex; justify-content: space-between; margin-bottom: 45px; position: relative; }
-        .progress-stepper::before { content: ""; position: absolute; top: 15px; left: 0; right: 0; height: 2px; background: var(--border-light); z-index: 1; }
-        .step-dot { width: 32px; height: 32px; background: var(--border-light); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; z-index: 2; transition: 0.3s; color: white; }
-        .step-dot.active, .step-dot.completed { background: var(--main-gold); box-shadow: 0 0 0 4px rgba(244, 180, 0, 0.2); }
+        .card-content { padding: 40px; }
 
-        /* FORMULARIOS LIMPIOS */
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; }
+        /* MODERN STEPPER */
+        .progress-stepper { display: flex; justify-content: space-between; margin-bottom: 40px; position: relative; padding: 0 10px; }
+        .progress-stepper::before { content: ""; position: absolute; top: 18px; left: 20px; right: 20px; height: 3px; background: var(--border-color); z-index: 1; border-radius: 3px; }
+        .step-wrapper { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .step-dot { width: 38px; height: 38px; background: var(--surface); border: 3px solid var(--border-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; color: var(--text-muted); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-sizing: border-box; }
+        .step-wrapper.active .step-dot { background: var(--main-gold); border-color: var(--main-gold); color: var(--dark-blue); transform: scale(1.15); box-shadow: 0 0 15px rgba(255, 198, 39, 0.4); }
+        .step-wrapper.completed .step-dot { background: var(--dark-blue); border-color: var(--dark-blue); color: white; }
+        .step-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; opacity: 0.7; }
+        .step-wrapper.active .step-label { color: var(--dark-blue); opacity: 1; }
+
+        /* PREMIUM FORM INPUTS */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .full-width { grid-column: span 2; }
-        label { display: block; font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
-        input, select { width: 100%; padding: 14px 16px; border: 1.5px solid var(--border-light); border-radius: 10px; font-size: 15px; box-sizing: border-box; transition: 0.2s; background-color: #f8fafc; color: var(--text-dark); }
-        input:focus, select:focus { border-color: var(--main-blue); background-color: white; outline: none; box-shadow: 0 0 0 3px rgba(0, 74, 153, 0.1); }
-        
-        /* BOTONES CLAROS Y DIRECTOS */
-        .btn-primary { background: var(--main-blue); color: white; border: none; padding: 16px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 30px; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
-        .btn-primary:hover { background: #003875; transform: translateY(-2px); }
-        .btn-primary:disabled { background: #cbd5e0; cursor: not-allowed; transform: none; }
-        
+        .input-group { display: flex; flex-direction: column; text-align: left; }
+        .input-group label { font-size: 12px; font-weight: 700; color: var(--dark-blue); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        input, select { width: 100%; padding: 15px 18px; border: 2px solid transparent; border-radius: 12px; font-size: 15px; box-sizing: border-box; background-color: #f1f5f9; color: var(--text-dark); transition: all 0.3s ease; font-weight: 500; }
+        input:focus, select:focus { border-color: var(--light-blue); background-color: var(--surface); outline: none; box-shadow: 0 4px 12px rgba(0, 91, 187, 0.1); }
+        input::placeholder { color: #94a3b8; }
+
+        /* DYNAMIC BUTTONS */
+        .btn-primary { background: var(--dark-blue); color: white; border: none; padding: 18px; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; width: 100%; margin-top: 35px; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px; position: relative; overflow: hidden; }
+        .btn-primary:hover { background: var(--light-blue); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0, 43, 127, 0.25); }
+        .btn-primary:active { transform: translateY(0); }
+        .btn-primary:disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* UI ELEMENTS */
         .hidden { display: none !important; }
-        .timer-pill { background: var(--main-red); color: white; padding: 8px 20px; border-radius: 20px; font-family: monospace; font-weight: bold; margin-bottom: 25px; display: inline-block; font-size: 1.3rem; letter-spacing: 1px;}
+        .section-title { color: var(--dark-blue); font-size: 1.5rem; margin-top: 0; margin-bottom: 15px; text-align: left; font-weight: 800; }
         
-        /* INSTRUCCIONES SIN SOBRECARGA */
-        .instruction-box { background: #f0f4f8; padding: 25px; border-radius: 12px; margin: 20px 0; text-align: left; border-left: 4px solid var(--main-blue); }
-        .instruction-box h4 { margin-top: 0; color: var(--main-blue); font-size: 15px; text-transform: uppercase; }
-        .instruction-box p { font-size: 15px; color: var(--text-dark); line-height: 1.5; margin-bottom: 0; }
-
-        /* PREGUNTAS Y OPCIONES */
-        .options-grid { display: grid; gap: 14px; margin-top: 25px; }
-        .option-card { background: white; border: 2px solid var(--border-light); padding: 18px 22px; border-radius: 12px; cursor: pointer; text-align: left; font-weight: 500; transition: all 0.2s ease; font-size: 1.05rem; box-sizing: border-box; color: var(--text-dark); }
-        .option-card:hover { border-color: var(--main-blue); background: #f4f8fc; transform: translateX(4px); }
+        .timer-pill { background: var(--dark-red); color: white; padding: 8px 24px; border-radius: 30px; font-family: 'Courier New', Courier, monospace; font-weight: 800; display: inline-block; font-size: 1.4rem; box-shadow: 0 4px 12px rgba(186, 12, 47, 0.3); letter-spacing: 2px; position: absolute; top: 30px; right: 40px; }
         
-        #progress-bar-container { background: var(--border-light); height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 30px; }
-        #progress-bar, #grammar-progress-bar { background: var(--main-blue); height: 100%; width: 0%; transition: 0.4s ease-out; }
+        .instruction-box { background: rgba(0, 91, 187, 0.04); padding: 20px 25px; border-radius: 12px; margin: 0 0 25px 0; text-align: left; border-left: 4px solid var(--light-blue); }
+        .instruction-box h4 { margin: 0 0 8px 0; color: var(--dark-blue); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .instruction-box p { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin: 0; }
 
-        /* SECCIÓN ORAL */
-        video { width: 160px; height: auto; border: 3px solid var(--border-light); border-radius: 12px; margin: 0 auto 20px auto; transform: scaleX(-1); display: block; }
+        /* QUESTION TEXT & OPTIONS (INTERACTIVE TILES) */
+        .question-text { text-align: left; font-size: 1.25rem; color: var(--text-dark); margin-bottom: 20px; font-weight: 700; line-height: 1.4; }
         
-        .btn-mic { background: var(--main-red); color: white; width: 75px; height: 75px; border-radius: 50%; border: none; font-size: 28px; cursor: pointer; margin: 20px auto; display: block; transition: 0.3s; box-shadow: 0 4px 15px rgba(217, 83, 79, 0.3); }
-        .btn-mic:hover { transform: scale(1.05); }
-        .btn-mic.recording { background: #48bb78; animation: pulse 1.5s infinite; box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4); }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        .options-grid { display: grid; gap: 12px; }
+        .option-card { background: var(--surface); border: 2px solid #e2e8f0; padding: 18px 24px; border-radius: 12px; cursor: pointer; text-align: left; font-weight: 600; font-size: 1.05rem; color: var(--text-dark); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .option-card:hover { border-color: var(--main-gold); background: #fffcf5; transform: scale(1.02); box-shadow: 0 6px 15px rgba(244, 180, 0, 0.15); padding-left: 30px; }
+        
+        /* SMOOTH PROGRESS BARS */
+        #progress-bar-container { background: #f1f5f9; height: 6px; border-radius: 3px; overflow: hidden; margin-bottom: 25px; }
+        #progress-bar, #grammar-progress-bar { background: linear-gradient(90deg, var(--light-blue), var(--dark-blue)); height: 100%; width: 0%; transition: width 0.5s ease-out; }
 
-        /* PANTALLA FINAL EXACTA A LA FOTO */
-        .trophy-icon { font-size: 65px; margin-bottom: 10px; }
-        .final-title { color: var(--main-blue); font-size: 24px; font-weight: 800; margin-bottom: 15px; }
-        .final-subtitle { color: var(--text-muted); font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .check-icon { background: #48bb78; color: white; border-radius: 4px; padding: 2px 4px; font-size: 12px; font-weight: bold; }
+        /* MEDIA & SPEAKING SECTION */
+        .media-container { background: #f8fafc; border-radius: 16px; padding: 25px; margin-bottom: 20px; border: 1px solid #e2e8f0; }
+        video { width: 100%; max-width: 220px; height: auto; border: 4px solid var(--surface); border-radius: 16px; margin: 0 auto 20px auto; transform: scaleX(-1); display: block; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        
+        .btn-mic { background: var(--dark-red); color: white; width: 80px; height: 80px; border-radius: 50%; border: none; font-size: 32px; cursor: pointer; margin: 10px auto; display: flex; align-items: center; justify-content: center; transition: all 0.3s; box-shadow: 0 8px 20px rgba(186, 12, 47, 0.3); }
+        .btn-mic:hover { transform: scale(1.08); background: #a00a28; }
+        .btn-mic.recording { background: #10b981; animation: pulseRecord 1.5s infinite; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4); }
+        @keyframes pulseRecord { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+
+        .record-status { font-weight: 700; color: var(--text-muted); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-top: 15px; }
+
+        /* END SCREEN CELEBRATION */
+        .end-screen { padding: 40px 0 20px; }
+        .trophy-container { position: relative; display: inline-block; margin-bottom: 20px; }
+        .trophy-icon { font-size: 80px; filter: drop-shadow(0 10px 15px rgba(244, 180, 0, 0.3)); }
+        .final-title { color: var(--dark-blue); font-size: 28px; font-weight: 800; margin-bottom: 10px; }
+        .final-subtitle { color: var(--text-muted); font-size: 16px; font-weight: 500; }
+        .status-badge { display: inline-flex; align-items: center; gap: 8px; background: #ecfdf5; color: #059669; padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 14px; margin-top: 20px; border: 1px solid #a7f3d0; }
     </style>
 </head>
 <body>
 
 <div class="main-card">
-    <div class="cintillo"></div>
+    <div class="app-header">
+        <h1 class="main-title">Global Placement Test</h1>
+    </div>
+    
     <div class="card-content">
-        <div class="main-title">Global English Placement Test</div>
+        <!-- MODERN STEPPER -->
         <div class="progress-stepper">
-            <div class="step-dot active" id="dot1">1</div>
-            <div class="step-dot" id="dot2">2</div>
-            <div class="step-dot" id="dot3">3</div>
-            <div class="step-dot" id="dot4">4</div>
+            <div class="step-wrapper active" id="step1">
+                <div class="step-dot">1</div>
+                <span class="step-label">Profile</span>
+            </div>
+            <div class="step-wrapper" id="step2">
+                <div class="step-dot">2</div>
+                <span class="step-label">Listen</span>
+            </div>
+            <div class="step-wrapper" id="step3">
+                <div class="step-dot">3</div>
+                <span class="step-label">Grammar</span>
+            </div>
+            <div class="step-wrapper" id="step4">
+                <div class="step-dot">4</div>
+                <span class="step-label">Speak</span>
+            </div>
         </div>
 
         <!-- FASE 0: SETUP -->
         <div id="section-setup">
+            <h2 class="section-title">Student Profile</h2>
+            <div class="instruction-box">
+                <h4>Welcome</h4>
+                <p>Please provide your accurate information to begin the assessment.</p>
+            </div>
             <div class="form-grid">
-                <div class="full-width"><label>Full Name</label><input type="text" id="stdName" placeholder="e.g., John Doe"></div>
-                <div><label>ID Card / Passport</label><input type="text" id="stdId" placeholder="ID Number"></div>
-                <div><label>Email Address</label><input type="email" id="stdEmail" placeholder="example@mail.com"></div>
-                <div><label>Phone Number</label><input type="tel" id="stdPhone" placeholder="Phone"></div>
-                <div class="full-width">
+                <div class="input-group full-width">
+                    <label>Full Name</label>
+                    <input type="text" id="stdName" placeholder="e.g., Jane Doe">
+                </div>
+                <div class="input-group">
+                    <label>ID / Passport</label>
+                    <input type="text" id="stdId" placeholder="Document Number">
+                </div>
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="stdEmail" placeholder="name@domain.com">
+                </div>
+                <div class="input-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="stdPhone" placeholder="Mobile Number">
+                </div>
+                <div class="input-group">
                     <label>Branch / Program</label>
                     <select id="stdSede">
                         <option value="Las Mercedes">Las Mercedes</option>
@@ -106,64 +161,73 @@
                     </select>
                 </div>
             </div>
-            <button class="btn-primary" onclick="startPhase1()">Proceed to Assessment</button>
+            <button class="btn-primary" onclick="startPhase1()">Begin Assessment</button>
         </div>
 
         <!-- FASE 1: LISTENING -->
         <div id="section-listening" class="hidden">
             <div id="timerDisplay" class="timer-pill">15:00</div>
-            <h2 style="color: var(--main-blue); margin: 0; font-size: 1.6rem;">Part 1: Listening</h2>
+            <h2 class="section-title">Listening Comprehension</h2>
+            
             <div class="instruction-box" id="listen-instructions">
-                <h4>Instructions</h4>
-                <p>Ensure your headphones are connected. The timer starts when you press play. You only have one opportunity to listen.</p>
-                <button class="btn-primary" onclick="startListeningTest()">▶️ Play Audio & Start</button>
+                <h4>Guidelines</h4>
+                <p>Ensure your audio is working. You only have <strong>one opportunity</strong> to listen. The timer starts automatically.</p>
+                <button class="btn-primary" onclick="startListeningTest()">▶ Play Audio & Start</button>
             </div>
+            
             <div id="listening-ui" class="hidden">
                 <div id="progress-bar-container"><div id="progress-bar"></div></div>
-                <h3 id="listenQText" style="text-align: left; font-size: 1.2rem; color: var(--main-blue); margin-bottom: 20px;"></h3>
+                <div class="question-text" id="listenQText"></div>
                 <div id="listenOptions" class="options-grid"></div>
             </div>
         </div>
 
         <!-- FASE 2: GRAMMAR -->
         <div id="section-grammar" class="hidden">
-            <h2 style="color: var(--main-blue); font-size: 1.6rem; margin: 0;">Part 2: Language Use</h2>
+            <h2 class="section-title">Language Use</h2>
+            
             <div class="instruction-box" id="grammar-instructions">
-                <h4>Instructions</h4>
-                <p>This is a sequential test. The system will stop automatically after 5 consecutive errors to determine your current baseline level.</p>
-                <button class="btn-primary" onclick="startGrammarTest()">Start Language Test</button>
+                <h4>Guidelines</h4>
+                <p>This is a sequential adaptive test. It will stop automatically after 5 consecutive errors to baseline your level.</p>
+                <button class="btn-primary" onclick="startGrammarTest()">Start Section</button>
             </div>
+            
             <div id="grammar-ui" class="hidden">
                 <div id="progress-bar-container"><div id="grammar-progress-bar"></div></div>
-                <h3 id="grammarQText" style="text-align: left; font-size: 1.2rem; color: var(--main-blue); margin-bottom: 20px;"></h3>
+                <div class="question-text" id="grammarQText"></div>
                 <div id="grammarOptions" class="options-grid"></div>
             </div>
         </div>
 
         <!-- FASE 3: SPEAKING -->
         <div id="section-speaking" class="hidden">
-            <h2 style="color: var(--main-blue); font-size: 1.6rem; margin: 0;">Part 3: Oral Validation</h2>
+            <h2 class="section-title">Oral Validation</h2>
+            
             <div class="instruction-box" id="speaking-instructions">
-                <h4>Instructions</h4>
-                <p>We require camera and microphone access to record your oral responses. This is mandatory to validate your previous scores.</p>
+                <h4>Hardware Check</h4>
+                <p>We require camera and microphone access to record your responses. This guarantees the integrity of your results.</p>
                 <button class="btn-primary" onclick="initMedia()">Enable Camera & Mic</button>
             </div>
+            
             <div id="speaking-ui" class="hidden">
-                <video id="video-feed" autoplay muted playsinline></video>
-                <h3 id="speakQText" style="font-size: 1.2rem; color: var(--text-dark); margin-top: 15px; min-height: 60px; padding: 0 20px;"></h3>
-                <button class="btn-mic" id="recordBtn" onclick="toggleRecording()">🎤</button>
-                <p id="recordStatus" style="font-weight: bold; color: var(--text-muted);">Tap microphone to record</p>
-                <button class="btn-primary" id="nextSpeakBtn" onclick="nextSpeakingQ()" disabled>Next Question</button>
+                <div class="media-container">
+                    <video id="video-feed" autoplay muted playsinline></video>
+                    <div class="question-text" id="speakQText" style="text-align: center; min-height: 60px;"></div>
+                    <button class="btn-mic" id="recordBtn" onclick="toggleRecording()">🎤</button>
+                    <div class="record-status" id="recordStatus">Tap to Record</div>
+                </div>
+                <button class="btn-primary" id="nextSpeakBtn" onclick="nextSpeakingQ()" disabled>Submit & Next</button>
             </div>
         </div>
 
-        <!-- FASE 4: END (DISEÑO EXACTO A LA FOTO) -->
-        <div id="section-end" class="hidden" style="padding-top: 30px;">
-            <div class="trophy-icon">🏆</div>
-            <h2 class="final-title" id="final-title-text">Uploading Results...</h2>
-            <div class="final-subtitle" id="final-subtitle-text">
-                <span style="font-size: 1.2rem;">⏳ Processing secure data...</span>
+        <!-- FASE 4: END SCREEN -->
+        <div id="section-end" class="hidden end-screen">
+            <div class="trophy-container">
+                <div class="trophy-icon">🏆</div>
             </div>
+            <h2 class="final-title" id="final-title-text">Processing...</h2>
+            <p class="final-subtitle" id="final-subtitle-text">Securing your assessment data.</p>
+            <div id="status-badge-container"></div>
         </div>
     </div>
 </div>
@@ -358,11 +422,12 @@
     let mediaStream, mediaRecorder, audioChunks = [], recordedAudiosBase64 = [], studentPhotoBase64 = "";
 
     function setStep(step) {
-        document.querySelectorAll('.step-dot').forEach((el, index) => {
-            if (index < step) el.classList.add('completed');
-            else if (index === step) el.classList.add('active');
-            else { el.classList.remove('active'); el.classList.remove('completed'); }
-        });
+        for(let i=1; i<=4; i++) {
+            let el = document.getElementById('step'+i);
+            if(i < step) { el.classList.remove('active'); el.classList.add('completed'); }
+            else if(i === step) { el.classList.add('active'); el.classList.remove('completed'); }
+            else { el.classList.remove('active', 'completed'); }
+        }
     }
 
     function startPhase1() {
@@ -371,7 +436,7 @@
         globalData.student = { name: n, id: id, email: document.getElementById('stdEmail').value, phone: document.getElementById('stdPhone').value, sede: document.getElementById('stdSede').value };
         document.getElementById('section-setup').classList.add('hidden');
         document.getElementById('section-listening').classList.remove('hidden');
-        setStep(1);
+        setStep(2);
     }
 
     function startListeningTest() {
@@ -403,7 +468,7 @@
         clearInterval(timerInterval); audioTrack.pause(); currentIdx = 0;
         document.getElementById('section-listening').classList.add('hidden');
         document.getElementById('section-grammar').classList.remove('hidden');
-        setStep(2);
+        setStep(3);
     }
 
     function startGrammarTest() {
@@ -433,7 +498,7 @@
         currentIdx = 0;
         document.getElementById('section-grammar').classList.add('hidden');
         document.getElementById('section-speaking').classList.remove('hidden');
-        setStep(3);
+        setStep(4);
     }
 
     async function initMedia() {
@@ -448,7 +513,7 @@
             document.getElementById('speaking-instructions').classList.add('hidden');
             document.getElementById('speaking-ui').classList.remove('hidden');
             renderSpeakingQ();
-        } catch(e) { alert("Camera and Microphone are required."); }
+        } catch(e) { alert("Camera and Microphone access are required to proceed."); }
     }
 
     function renderSpeakingQ() {
@@ -468,16 +533,18 @@
                 reader.onloadend = () => { recordedAudiosBase64.push({ q: currentIdx + 1, audioData: reader.result.split(',')[1] }); document.getElementById('nextSpeakBtn').disabled = false; }
             };
             mediaRecorder.start();
-            btn.classList.add('recording'); btn.innerText = "⏸"; status.innerText = "🔴 Recording... Tap to stop"; status.style.color = "var(--main-red)";
+            btn.classList.add('recording'); btn.innerText = "⏸"; 
+            status.innerText = "🔴 Recording... Tap to stop"; status.style.color = "var(--dark-red)";
         } else {
             mediaRecorder.stop();
-            btn.classList.remove('recording'); btn.innerText = "🎤"; status.innerHTML = "<span class='check-icon'>✔</span> Audio saved. Click Next."; status.style.color = "#48bb78";
+            btn.classList.remove('recording'); btn.innerText = "🎤"; 
+            status.innerText = "✔ Audio saved. Click Next."; status.style.color = "#059669";
         }
     }
 
     function nextSpeakingQ() { 
         currentIdx++; 
-        document.getElementById('recordStatus').innerText = "Tap microphone to record"; 
+        document.getElementById('recordStatus').innerText = "Tap to Record"; 
         document.getElementById('recordStatus').style.color = "var(--text-muted)";
         renderSpeakingQ(); 
     }
@@ -486,6 +553,7 @@
         if (mediaStream) mediaStream.getTracks().forEach(t => t.stop());
         document.getElementById('section-speaking').classList.add('hidden');
         document.getElementById('section-end').classList.remove('hidden');
+        document.querySelector('.progress-stepper').classList.add('hidden');
 
         try {
             await fetch(SCRIPT_URL, {
@@ -494,11 +562,12 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ student: globalData.student, scores: globalData.scores, photo: studentPhotoBase64, audios: recordedAudiosBase64 })
             });
-            document.getElementById('final-title-text').innerText = "Uploading Results...";
-            document.getElementById('final-subtitle-text').innerHTML = "<span class='check-icon' style='font-size: 16px; padding: 4px 8px;'>✔</span> Database updated successfully. You can close this tab.";
+            document.getElementById('final-title-text').innerText = "Assessment Complete";
+            document.getElementById('final-subtitle-text').innerText = "Your results have been securely transmitted to your supervisor.";
+            document.getElementById('status-badge-container').innerHTML = '<div class="status-badge"><span>✔</span> Database updated successfully. You may close this tab.</div>';
         } catch (e) {
             document.getElementById('final-title-text').innerText = "Network Error";
-            document.getElementById('final-subtitle-text').innerText = "Please notify your supervisor.";
+            document.getElementById('final-subtitle-text').innerText = "There was a problem sending the data. Please notify your supervisor.";
         }
     }
 </script>
