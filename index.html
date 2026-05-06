@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global English Placement Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root { --main-blue: #004a99; --main-gold: #f4b400; --bg-light: #f4f7f9; --text-main: #2d3748; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg-light); color: var(--text-main); margin: 0; display: flex; justify-content: center; padding: 20px; }
+        .main-card { background: white; width: 100%; max-width: 700px; padding-bottom: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); text-align: center; }
+        .header-bar { height: 20px; width: 100%; background: linear-gradient(90deg, var(--main-blue) 70%, var(--main-gold) 70%); margin-bottom: 30px; }
+        .content { padding: 0 40px; }
+        .title { color: var(--main-blue); font-size: 22px; font-weight: 800; margin-bottom: 20px; text-transform: uppercase; }
+        .hidden { display: none !important; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
+        .btn { background: var(--main-blue); color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 15px; }
+        .btn:disabled { background: #ccc; cursor: not-allowed; }
+        .btn-record { background: #d9534f; border-radius: 50%; width: 60px; height: 60px; border: none; color: white; font-size: 24px; cursor: pointer; margin: 10px auto; display: block; }
+        .btn-record.recording { background: #5cb85c; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        .option-card { background: #fff; border: 2px solid #edf2f7; padding: 15px; border-radius: 10px; cursor: pointer; text-align: left; margin-bottom: 10px; font-weight: 500; }
+        .option-card:hover { border-color: var(--main-blue); background: #f0f7ff; }
+        video { width: 100%; max-width: 300px; border-radius: 8px; border: 2px solid var(--main-blue); transform: scaleX(-1); }
+    </style>
+</head>
+<body>
+
+<div class="main-card">
+    <div class="header-bar"></div>
+    <div class="content">
+        <div class="title">Global English Placement Test</div>
+
+        <!-- FASE 0: SETUP -->
+        <div id="phase-setup" class="phase">
+            <p>Welcome. Please enter your accurate details.</p>
+            <input type="text" id="stdName" placeholder="Full Name (e.g., John Doe)">
+            <input type="text" id="stdId" placeholder="ID Card / Passport">
+            <input type="email" id="stdEmail" placeholder="Email Address">
+            <input type="tel" id="stdPhone" placeholder="Phone Number">
+            <select id="stdSede">
+                <option value="Campus A">Campus A</option>
+                <option value="Campus B">Campus B</option>
+                <option value="Digital">Digital Program</option>
+            </select>
+            <button class="btn" onclick="startPhase1()">PROCEED TO PHASE 1</button>
+        </div>
+
+        <!-- FASE 1: LISTENING -->
+        <div id="phase-listening" class="phase hidden">
+            <h2 style="color: var(--main-blue);">Phase 1: Listening</h2>
+            <p>Listen to the audio and answer the questions. You have 15 minutes.</p>
+            <div id="timerDisplay" style="font-weight: bold; color: red; font-size: 1.2rem;">15:00</div>
+            <button class="btn" id="playAudioBtn" onclick="startListeningTest()">▶️ START AUDIO & TEST</button>
+            <div id="listening-ui" class="hidden">
+                <h3 id="listenQText"></h3>
+                <div id="listenOptions"></div>
+            </div>
+        </div>
+
+        <!-- FASE 2: LANGUAGE USE -->
+        <div id="phase-grammar" class="phase hidden">
+            <h2 style="color: var(--main-blue);">Phase 2: Language Use</h2>
+            <p>Sequential test. It will stop automatically after 5 consecutive mistakes.</p>
+            <button class="btn" onclick="startGrammarTest()">START LANGUAGE TEST</button>
+            <div id="grammar-ui" class="hidden">
+                <h3 id="grammarQText"></h3>
+                <div id="grammarOptions"></div>
+            </div>
+        </div>
+
+        <!-- FASE 3: SPEAKING & PHOTO VALIDATION -->
+        <div id="phase-speaking" class="phase hidden">
+            <h2 style="color: var(--main-blue);">Phase 3: Oral Validation</h2>
+            <p>Please allow camera and microphone access. We need a photo and your recorded answers.</p>
+            <video id="video-feed" autoplay muted playsinline></video>
+            <div id="speaking-ui" class="hidden">
+                <h3 id="speakQText" style="margin-top: 20px;"></h3>
+                <button id="recordBtn" class="btn-record" onclick="toggleRecording()">🎤</button>
+                <p id="recordStatus">Tap microphone to record your answer</p>
+                <button class="btn" id="nextSpeakBtn" onclick="nextSpeakingQ()" disabled>NEXT QUESTION</button>
+            </div>
+            <button class="btn" id="initMediaBtn" onclick="initMedia()">ENABLE CAMERA & MIC</button>
+        </div>
+
+        <!-- END -->
+        <div id="phase-end" class="phase hidden">
+            <h2>Test Completed Successfully</h2>
+            <p>Uploading your results, audio recordings, and photo to the secure database...</p>
+            <p id="uploadStatus" style="font-weight: bold; color: var(--main-gold);">⏳ Processing...</p>
+        </div>
+    </div>
+</div>
+
+<canvas id="photo-canvas" class="hidden" width="640" height="480"></canvas>
+
+<script>
+    // --- DATABASE SCRIPT URL (PENDING GOOGLE APPS SCRIPT CREATION) ---
+    const SCRIPT_URL = "URL_DEL_SCRIPT_AQUI_LO_PONDREMOS_LUEGO";
+
+    // --- VARIABLES GLOBALES ---
+    let globalData = { student: {}, scores: { listening: 0, grammar: 0 }, mistakes: { listen: [], grammar: [] } };
+    let currentIdx = 0, consecutiveErrors = 0;
+    
+    // Audio source (Apuntando al archivo exacto en tu repositorio)
+    const audioTrack = new Audio("Placement test v2 slow.mp3");
+    let timerInterval, timeLeft = 900;
+
+    // Speaking Media Variables
+    let mediaStream, mediaRecorder, audioChunks = [];
+    let recordedAudiosBase64 = [];
+    let studentPhotoBase64 = "";
+
+    // --- QUESTION BANKS (Copia aquí tus bancos completos de los archivos anteriores) ---
+    const listeningBank = [
+        { lvl: 1, q: "According to the audio, what is Alex's current occupation?", opt: ["Teacher", "Student", "Doctor"], c: 1 },
+        // INSERTA AQUÍ EL RESTO DEL BANCO DE LISTENING (40 PREGUNTAS)
+    ];
+
+    const grammarBank = [
+        { q: "What ___ your name?", a: ["am", "is", "are", "be"], c: 1 },
+        // INSERTA AQUÍ EL RESTO DEL BANCO DE GRAMMAR (108 PREGUNTAS)
+    ];
+
+    const speakingBank = [
+        "What is your full name, where are you from, and what do you do? Describe your family.",
+        "Describe your typical morning routine. What time do you wake up and what do you do?",
+        // INSERTA AQUÍ EL RESTO DEL BANCO DE SPEAKING
+    ];
+
+    // --- FUNCIONES CORE ---
+    function switchPhase(hideId, showId) {
+        document.getElementById(hideId).classList.add('hidden');
+        document.getElementById(showId).classList.remove('hidden');
+    }
+
+    function startPhase1() {
+        const name = document.getElementById('stdName').value;
+        const id = document.getElementById('stdId').value;
+        if(!name || !id) return alert("Name and ID are required.");
+        globalData.student = { name, id, email: document.getElementById('stdEmail').value, phone: document.getElementById('stdPhone').value, sede: document.getElementById('stdSede').value };
+        switchPhase('phase-setup', 'phase-listening');
+    }
+
+    // --- LISTENING LOGIC ---
+    function startListeningTest() {
+        document.getElementById('playAudioBtn').classList.add('hidden');
+        document.getElementById('listening-ui').classList.remove('hidden');
+        audioTrack.play();
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            let m = Math.floor(timeLeft / 60), s = timeLeft % 60;
+            document.getElementById('timerDisplay').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+            if(timeLeft <= 0) { clearInterval(timerInterval); startPhase2(); }
+        }, 1000);
+        renderListeningQ();
+    }
+
+    function renderListeningQ() {
+        if(currentIdx >= listeningBank.length) return startPhase2();
+        const q = listeningBank[currentIdx];
+        document.getElementById('listenQText').innerText = `Q${currentIdx + 1}: ${q.q}`;
+        const container = document.getElementById('listenOptions');
+        container.innerHTML = '';
+        q.opt.forEach((opt, i) => {
+            let div = document.createElement('div');
+            div.className = 'option-card'; div.innerText = opt;
+            div.onclick = () => {
+                if(i === q.c) globalData.scores.listening++;
+                else globalData.mistakes.listen.push(`Q${currentIdx+1} Ans: ${opt}`);
+                currentIdx++; renderListeningQ();
+            };
+            container.appendChild(div);
+        });
+    }
+
+    // --- GRAMMAR LOGIC ---
+    function startPhase2() {
+        clearInterval(timerInterval); audioTrack.pause();
+        currentIdx = 0; switchPhase('phase-listening', 'phase-grammar');
+    }
+
+    function startGrammarTest() {
+        document.querySelector('#phase-grammar button').classList.add('hidden');
+        document.getElementById('grammar-ui').classList.remove('hidden');
+        renderGrammarQ();
+    }
+
+    function renderGrammarQ() {
+        if(currentIdx >= grammarBank.length || consecutiveErrors >= 5) return startPhase3();
+        const q = grammarBank[currentIdx];
+        document.getElementById('grammarQText').innerText = `Q${currentIdx + 1}: ${q.q}`;
+        const container = document.getElementById('grammarOptions');
+        container.innerHTML = '';
+        q.a.forEach((opt, i) => {
+            let div = document.createElement('div');
+            div.className = 'option-card'; div.innerText = opt;
+            div.onclick = () => {
+                if(i === q.c) { globalData.scores.grammar++; consecutiveErrors = 0; }
+                else { consecutiveErrors++; globalData.mistakes.grammar.push(`Q${currentIdx+1} Ans: ${opt}`); }
+                currentIdx++; renderGrammarQ();
+            };
+            container.appendChild(div);
+        });
+    }
+
+    // --- SPEAKING & MEDIA LOGIC ---
+    function startPhase3() {
+        currentIdx = 0; switchPhase('phase-grammar', 'phase-speaking');
+    }
+
+    async function initMedia() {
+        try {
+            mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            document.getElementById('video-feed').srcObject = mediaStream;
+            
+            // Tomar foto automáticamente
+            setTimeout(() => {
+                const canvas = document.getElementById('photo-canvas');
+                canvas.getContext('2d').drawImage(document.getElementById('video-feed'), 0, 0, canvas.width, canvas.height);
+                studentPhotoBase64 = canvas.toDataURL('image/jpeg').split(',')[1];
+            }, 2000);
+
+            document.getElementById('initMediaBtn').classList.add('hidden');
+            document.getElementById('speaking-ui').classList.remove('hidden');
+            renderSpeakingQ();
+        } catch(e) { alert("Camera/Microphone access is required."); }
+    }
+
+    function renderSpeakingQ() {
+        if(currentIdx >= speakingBank.length) return endTest();
+        document.getElementById('speakQText').innerText = `Oral Q${currentIdx + 1}: ${speakingBank[currentIdx]}`;
+        document.getElementById('nextSpeakBtn').disabled = true;
+    }
+
+    function toggleRecording() {
+        const btn = document.getElementById('recordBtn');
+        const status = document.getElementById('recordStatus');
+        
+        if(!mediaRecorder || mediaRecorder.state === "inactive") {
+            audioChunks = [];
+            mediaRecorder = new MediaRecorder(mediaStream);
+            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                const reader = new FileReader();
+                reader.readAsDataURL(audioBlob);
+                reader.onloadend = () => {
+                    recordedAudiosBase64.push({ q: currentIdx + 1, audioData: reader.result.split(',')[1] });
+                    document.getElementById('nextSpeakBtn').disabled = false;
+                }
+            };
+            mediaRecorder.start();
+            btn.classList.add('recording');
+            status.innerText = "🔴 RECORDING... Tap to stop";
+        } else {
+            mediaRecorder.stop();
+            btn.classList.remove('recording');
+            status.innerText = "✅ Saved. Click Next.";
+        }
+    }
+
+    function nextSpeakingQ() { currentIdx++; renderSpeakingQ(); }
+
+    // --- END & UPLOAD LOGIC ---
+    function endTest() {
+        mediaStream.getTracks().forEach(t => t.stop()); // Apagar cámara
+        switchPhase('phase-speaking', 'phase-end');
+        uploadData();
+    }
+
+    async function uploadData() {
+        // Generación del payload completo (PDF se generará y adjuntará en el backend o aquí si lo requieres)
+        const payload = {
+            student: globalData.student,
+            scores: globalData.scores,
+            photo: studentPhotoBase64,
+            audios: recordedAudiosBase64
+        };
+        
+        // Simulación de envío hasta crear el Apps Script
+        console.log("Data ready to upload: ", payload);
+        document.getElementById('uploadStatus').innerText = "✅ Test Completed. Pending backend connection.";
+    }
+</script>
+</body>
+</html>
